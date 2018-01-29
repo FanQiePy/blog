@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block js %}
+    <script>
+		$(document).ready(function () {
+		    var size_li = $("ul#myList li").size();
+		    var x=2;
+		    $('ul#myList li:lt('+x+')').show();
+		    $('div#loadMore').click(function () {
+		        x= (x+1 <= size_li) ? x+1 : size_li;
+		        $('ul#myList li:lt('+x+')').show();
+		    });
+		    $('div#showLess').click(function () {
+		        x=(x-1<0) ? 1 : x-1;
+		        $('ul#myList li').not(':lt('+x+')').hide();
+		    });
+		});
+	</script>
+{% endblock %}
+{% block content %}
+<!-- content -->
+<div class="content">
+	<div class="container">
+	    <div class="load_more">
+            <div class="row">
+                <div class="col-md-9">
+                 <ul id="myList">
+                <!-- These are our grid blocks -->
+                    {% for article in articles %}
+                    <li>
+                    <div class="l_g">
+                        <div class="integ">
+                                <div class="integer">
+                                    <a href="{% url 'detail' article.article_num %}"><h3>{{ article.title }}</h3></a>
+                                    <div class="is-collapsed">
+                                        {% if article.image %}
+                                        <div class="RichContent-cover">
+                                            <a href="{% url 'detail' article.article_num %}"><img src="{{ article.image.url }}" alt=""></a>
+                                        </div>
+                                        <div class="RichContent-inner">
+                                            <span>{{ article.instruction }}</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="RichContent-all">
+                                            <span>{{ article.instruction }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span class="adm">{{ article.time }}</span>
+                                        <a href="{% url 'detail' article.article_num %}" class="link">阅读全文</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </li>
+                    {% endfor %}
+                    <div class="clearfix"></div>
+                 <!----//--->
+              </ul>
+             </div>
+                <div class="col-md-3">
+                <ul id="right-list">
+                    <li style="list-style-type: none">
+                        <div class="l_g">
+                                <div class="posts">
+                                    <h4>热门文章</h4>
+                                    {% for article in hot_articles %}
+                                    <h6><a href="{% url 'detail' article.article_num %}">{{ article.title }}</a></h6>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="comments">
+                                    <h4>最近留言</h4>
+                                    {% for comment in comments %}
+                                    <h6><a href="{% url 'detail' comment.article_num %}"><span>{{ comment.content }}</span> </a></h6>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="archievs">
+                                    <h4>文章归档</h4>
+                                    {% for date in article_filed %}
+                                    <h6><a href="?filed_date={{ date.date }}&category={{ category }}">{{ date.date }}</a></h6>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="categories">
+                                    <h4>文章分类</h4>
+                                    {% for category_item in categories %}
+                                    <h6><a href="?filed_date={{ filed_date }}&category={{ category_item.name }}">{{ category_item.name }}</a></h6>
+                                    {% endfor %}
+                                </div>
+                        </div>
+                    </li>
+                </ul>
+             </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="loadMore">Load more</div>
+                    <div id="showLess">Show less</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content -->
+{% endblock %}
+{#{% block foot_script %}#}
+{#    <script>#}
+{#    $(document).ready(function () {#}
+{#        $("div#article_1").click(function () {#}
+{#            $(this).toggleClass('not-collapsed');#}
+{#            $("span.collapse").css("display", "inline-block");#}
+{#            $(".RichContent-inner").removeClass("RichContent-inner-collapsed");#}
+{#        });#}
+{#        $("span.collapse").click(function () {#}
+{#            $(this).hide();#}
+{#            $("div#article_1").toggleClass('is-collapsed');#}
+{#            $(".RichContent-inner").addClass("RichContent-inner-collapsed");#}
+{#        })#}
+{#    })#}
+{#    </script>#}
+{#{% endblock %}#}

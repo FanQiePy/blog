@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="details">
+		<div class="container">
+			<div class="det_text">
+                {% autoescape on %}
+                {{ article.content }}
+                {% endautoescape %}
+			</div>
+			<ul class="links">
+                <li><i class="date"> </i><span class="icon_text">{{ article.time }}</span></li>
+                <li><a href="#"><i class="comments"> </i><span class="icon_text">{{ comments_count }}</span></a></li>
+                <li><i class="views"> </i><span class="icon_text">{{ article.click_num }}</span></li>
+                <li><i class="likes"> </i><span class="icon_text">{{ article.like_num }}</span></li>
+                <li><i class="tags"> </i><span class="icon_text">{% for tag in tags %}{{ tag.name }}{% endfor %}</span></li>
+            </ul>
+            <!-- 评论 -->
+            <div class="comments1">
+                 <h4>评论</h4>
+                 <div class="comments-main">
+                    {% for comment in comments %}
+                    <div class="cmts-main-right">
+                        <h5>{{ comment.username }}</h5>
+                        <p>{{ comment.content }}</p>
+                        <div class="cmts">
+                            <div class="cmnts-left">
+                                <p>{{ comment.time }}</p>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="clearfix"></div>
+                 </div>
+            </div>
+            <div class="comment-error"></div>
+            <!-- 发表评论 -->
+			<div class="lev">
+                <div class="leave">
+                    <h4>发表评论</h4>
+                </div>
+                <form id="comment-form" method="post">
+{#                    {% csrf_token %}#}
+                    <label for="id_username">用户名</label>
+                    <input id="id_username" name="username" type="text" value="" size="30" aria-required="true">
+                    <label for="id_email">邮件</label>
+                    <input id="id_email" name="email" type="text" value="" size="30" aria-required="true">
+                    <label for="id_content">内容</label>
+                    <textarea id="id_content" name="content"></textarea>
+                    <div class="clearfix" id="fields_error"></div>
+                    <input name="submit" type="button" id="submit" value="Send">
+                    <div class="clearfix"></div>
+               </form>
+            </div>
+		</div>
+	</div>
+{% endblock %}
+{% block foot_script %}
+<script type="text/javascript">
+    //添加评论
+    $('input#submit').on('click', function(){
+        var username = $("input#id_username").val();
+        var email = $("input#id_email").val();
+        var content = $("textarea#id_content").val();
+        var error_message = '';
+        var html_error = "";
+        var error_div = $("div#fields_error");
+        error_div.html("");
+        if (username === "" | email === "" | content === "") {
+            html_error = "<p>" + "字段不能为空" + "</p>";
+            error_div.prepend(html_error);
+            return
+        }
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url:"{% url 'detail' article.article_num %}",
+            data:{"username": username,"email": email, "content": content},
+            async: true,
+            dataType:"json",
+            beforeSend:function(xhr, settings){
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function(data) {
+                if(data.status === 'failed'){
+                        if (data.hasOwnProperty('error')) {
+                            for (var item in data.error) {
+                                if (data.error.hasOwnProperty(item)) {
+                                    error_message = data.error[item];
+                                    html_error = "<p>" + error_message + "</p>";
+                                    $("div#fields_error").prepend(html_error);
+                                }
+                            }
+                        }
+
+                }else if(data.status === 'succeed'){
+                    var html_comment = "<div class=\"cmts-main-right\">\n" +
+                        "                        <h5>" + username + "</h5>\n" +
+                        "                        <p>" + content + "</p>\n" +
+                        "                        <div class=\"cmts\">\n" +
+                        "                            <div class=\"cmnts-left\">\n" +
+                        "                                <p>" + email + "</p>\n" +
+                        "                            </div>\n" +
+                        "                            <div class=\"clearfix\"></div>\n" +
+                        "                        </div>\n" +
+                        "                    </div>";
+
+                    $('div.comments-main').prepend(html_comment);
+                    $("form#comment-form")[0].reset();
+                }
+            }
+        });
+    });
+
+</script>
+{% endblock %}

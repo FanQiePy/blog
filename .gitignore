@@ -1,0 +1,17 @@
+# python
+*.pyc
+
+# data
+*.csv
+
+# log
+*.log
+
+# other
+github
+.idea
+*.whl
+migrations
+static
+media
+
