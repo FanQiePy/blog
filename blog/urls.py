@@ -19,6 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from article.views import index
 
+# API router
+from rest_framework import routers
+from mycrawl.views import HouseViewSet
+
+router = routers.DefaultRouter()
+router.register(r'house', HouseViewSet, base_name='house')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
@@ -26,6 +33,9 @@ urlpatterns = [
     path('crawl/', include('mycrawl.urls')),
     path('self/', include('myself.urls')),
 
+    # API router
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

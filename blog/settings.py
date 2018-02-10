@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'article',
     'mycrawl',
     'myself',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
