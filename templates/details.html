@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'highlight/styles/androidstudio.css' %}">
+{% endblock %}
+{% block js %}
+    <script src="{% static 'highlight/highlight.pack.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
 {% block content %}
     <div class="details">
 		<div class="container">
 			<div class="det_text">
-                {% autoescape on %}
-                {{ article.content }}
+                {% autoescape off %}
+                    {{ article.content }}
                 {% endautoescape %}
 			</div>
 			<ul class="links">

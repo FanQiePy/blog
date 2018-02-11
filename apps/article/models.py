@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
+from ckeditor.fields import RichTextField
 
 from bs4 import BeautifulSoup
 from datetime import date
@@ -62,9 +63,11 @@ class Article(models.Model):
     __original_image = None
     __original_content = None
 
-    def _make_article_num(cls, retries=10):
+    @classmethod
+    def _make_article_num(cls):
         """生成四位数的文章编号
         """
+        retries = 10
         while True:
             num = random.randint(1001, 9999)
             article = cls.objects.filter(article_num=str(num))
@@ -81,13 +84,13 @@ class Article(models.Model):
     title = models.CharField(verbose_name='标题', max_length=50)
     image = models.ImageField(verbose_name='封面图片', null=True, blank=True,
                               upload_to=article_image_path)
-    content = models.TextField(verbose_name='内容')
+    content = RichTextField(verbose_name='内容')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     click_num = models.IntegerField(verbose_name='点击数', default=0)
-    like_num = models.IntegerField(verbose_name='点击数', default=0)
+    like_num = models.IntegerField(verbose_name='点赞数', default=0)
     time = models.DateTimeField(verbose_name='发布时间', default=datetime.now)
     instruction = models.CharField(verbose_name='封面引文', max_length=200, null=True, blank=True)
-    article_num = models.CharField(max_length=4, unique=True, verbose_name='文章编号', default=_make_article_num)
+    article_num = models.CharField(max_length=4, unique=True, verbose_name='文章编号', null=True, blank=True)
     filed = models.ForeignKey(ArticleFiled, on_delete=models.CASCADE, null=True, blank=True,
                               default=_make_article_filed, verbose_name='文章归档')
     tags = models.ManyToManyField(Tag, through='ArticleTag', through_fields=('article', 'tag'),
@@ -97,6 +100,8 @@ class Article(models.Model):
         super(Article, self).__init__(*args, **kwargs)
         self.__original_content = self.content
         self.__original_image = self.image
+        if not self.pk or not self.article_num:
+            self.article_num = self._make_article_num()
 
     def check_image(self):
         return self.image != self.__original_image

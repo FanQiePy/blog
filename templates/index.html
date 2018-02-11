@@ -3,17 +3,18 @@
 {% block js %}
     <script>
 		$(document).ready(function () {
-		    var size_li = $("ul#myList li").size();
-		    var x=2;
-		    $('ul#myList li:lt('+x+')').show();
-		    $('div#loadMore').click(function () {
-		        x= (x+1 <= size_li) ? x+1 : size_li;
-		        $('ul#myList li:lt('+x+')').show();
-		    });
-		    $('div#showLess').click(function () {
-		        x=(x-1<0) ? 1 : x-1;
-		        $('ul#myList li').not(':lt('+x+')').hide();
-		    });
+		    $('ul#myList li').show();
+{#		    var size_li = $("ul#myList li").size();#}
+{#		    var x=2;#}
+{#		    $('ul#myList li:lt('+x+')').show();#}
+{#		    $('div#loadMore').click(function () {#}
+{#		        x= (x+1 <= size_li) ? x+1 : size_li;#}
+{#		        $('ul#myList li:lt('+x+')').show();#}
+{#		    });#}
+{#		    $('div#showLess').click(function () {#}
+{#		        x=(x-1<0) ? 1 : x-1;#}
+{#		        $('ul#myList li').not(':lt('+x+')').hide();#}
+{#		    });#}
 		});
 	</script>
 {% endblock %}
@@ -21,7 +22,7 @@
 <!-- content -->
 <div class="content">
 	<div class="container">
-	    <div class="load_more">
+	    <!--<div class="load_more"> -->
             <div class="row">
                 <div class="col-md-9">
                  <ul id="myList">
@@ -96,13 +97,15 @@
                 </ul>
              </div>
             </div>
+        <!-- unused load more div
             <div class="row">
                 <div class="col-md-12">
                     <div id="loadMore">Load more</div>
                     <div id="showLess">Show less</div>
                 </div>
             </div>
-        </div>
+            -->
+        <!--</div>-->
     </div>
 </div>
 <!-- content -->

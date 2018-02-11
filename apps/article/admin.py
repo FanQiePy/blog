@@ -1,5 +1,7 @@
+from django.db import models
 from django.contrib import admin
 
+from ckeditor.widgets import CKEditorWidget
 from .models import Article, ArticleFiled, Category, Comment
 # Register your models here.
 
@@ -7,11 +9,14 @@ from .models import Article, ArticleFiled, Category, Comment
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
 
-    list_display = ('title', 'content', 'image', 'category')
+    list_display = ('title', 'instruction', 'image', 'category')
     list_display_links = ('title', )
     list_filter = ('category', )
     list_select_related = True
     list_per_page = 30
+    formfield_overrides = {
+        models.TextField: {'widget': CKEditorWidget},
+    }
 
 
 @admin.register(ArticleFiled)
