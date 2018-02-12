@@ -9,6 +9,7 @@ from .models import Article, ArticleFiled, Category, Comment
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
 
+    fields = ('title',  'image', 'content', 'category', 'filed')
     list_display = ('title', 'instruction', 'image', 'category')
     list_display_links = ('title', )
     list_filter = ('category', )

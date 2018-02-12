@@ -100,8 +100,7 @@ class Article(models.Model):
         super(Article, self).__init__(*args, **kwargs)
         self.__original_content = self.content
         self.__original_image = self.image
-        if not self.pk or not self.article_num:
-            self.article_num = self._make_article_num()
+
 
     def check_image(self):
         return self.image != self.__original_image
@@ -122,11 +121,13 @@ class Article(models.Model):
     def __repr__(self):
         return self.title
 
-    # def save(self, *args, **kwargs):
-    #     tree = BeautifulSoup(self.content, 'lxml')
-    #     text = tree.get_text("", strip=True).encode('utf-8')
-    #     self.instruction = text.split("", maxsplit=200) + '...'
-    #     super(Article, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        # tree = BeautifulSoup(self.content, 'lxml')
+        # text = tree.get_text("", strip=True).encode('utf-8')
+        # self.instruction = text.split("", maxsplit=200) + '...'
+        if not self.article_num:
+            self.article_num = self._make_article_num()
+        super(Article, self).save(*args, **kwargs)
 
 
 class ArticleTag(models.Model):
