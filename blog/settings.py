@@ -9,9 +9,14 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+from __future__ import absolute_import, unicode_literals
 import os
 import sys
+from celery.schedules import crontab
+
+# loader celery
+# import djcelery
+# djcelery.setup_loader()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +49,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'ckeditor',
     'ckeditor_uploader',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +135,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -161,3 +168,29 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'Advanced',
     },
 }
+
+
+# django celery configuration
+CELERY_BROKER_URL = 'redis://:123qwe@localhost:6379/0'
+
+CELERY_RESULT_BACKEND = 'redis://:123qwe@localhost:6379/0'
+# for the cache backend
+# CELERY_RESULT_BACKEND = 'django-cache'
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_ENABLE_UTC = False
+
+CELERY_ALWAYS_EAGER = True
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_RESULT_SERIALIZER = 'json'
+
+FORKED_BY_MULTIPROCESSING = 1

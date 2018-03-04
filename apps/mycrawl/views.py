@@ -5,7 +5,8 @@ from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 
 from .serializers import HouseSerializer
-from .models import House5i5j
+from .models import House5i5j, ArticlePush
+from .tasks import article_push
 # Create your views here.
 
 
@@ -28,3 +29,10 @@ class HouseViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('address', )
     ordering_fields = ('square', 'price', 'square_price')
+
+
+def article_push_view(request):
+    # article_push.apply_async()
+    articles = ArticlePush.objects.all().order_by('-id')[:10]
+    context = {'articles': articles}
+    return render(request, 'crawl.html', context=context)

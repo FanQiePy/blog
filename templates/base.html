@@ -49,7 +49,7 @@
             <ul class="cl-effect-15">
                 <li class={% if request.path == '/' %}"active"{% endif %}><a href="{% url 'index' %}">首页</a></li>
                 <li class={% if request.path|slice:"9" == '/articles' %}"active"{% endif %}><a href="{% url 'index' %}">笔记</a></li>
-                <li class={% if request.path|slice:"6" == '/crawl' %}"active"{% endif %}><a href="{% url 'mycrawl' %}">爬虫</a></li>
+                <li class={% if request.path|slice:"6" == '/crawl' %}"active"{% endif %}><a href="{% url 'article_push' %}">爬虫</a></li>
                 <li class={% if request.path|slice:"5" == '/self' %}"active"{% endif %}><a href="{% url 'myself' %}">关于自己</a></li>
             </ul>
             <div class="clearfix"> </div>
